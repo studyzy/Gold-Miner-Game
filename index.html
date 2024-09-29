@@ -10,15 +10,21 @@
     />
 </head>
 <body>
-<div id="gameBoard"></div>
 <div id="successPopup" class="popup" style="display: none;">
 <img src="images/success.jpg"/>
 </div>
 <div id="failPopup" class="popup" style="display: none;">
-<img src="images/fail.jpg"/>
-    <label id="score">得分: 0</label>
+    <img src="images/fail.jpg"/>
+    <div class="score-container">
+        <label id="score">得分: 0</label>
+    </div>
     <button id="restartBtn">再来</button>
 </div>
+<audio id="rockSound" src="sounds/rock-destroy.mp3"></audio>
+<audio id="winningSound" src="sounds/winning.mp3"></audio>
+<audio id="failSound" src="sounds/fail.mp3"></audio>
+<audio id="shineSound" src="sounds/shine.mp3"></audio>
+
 </body>
 <script type="text/javascript" src="js/gold.js"></script>
 <script type="text/javascript" src="js/game.js"></script>

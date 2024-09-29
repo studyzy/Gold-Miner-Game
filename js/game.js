@@ -19,17 +19,22 @@ var bg = new Image(); // 背景图片
 bg.src="images/background.jpg";
 var hook = new Image(); // 钩子图片
 hook.src="images/hook.png";
-var targetIM = new Image(); // 目标图片
-targetIM.src="images/target.png";
-var dolarIM = new Image(); // 金币图片
-dolarIM.src="images/dolar.png";
-var levelIM = new Image(); // 关卡图片
-levelIM.src="images/level.png";
-var clockIM = new Image(); // 时钟图片
-clockIM.src="images/clock.png";
 
 let N = -10; // 金块数量
 
+const failPopup = document.getElementById('failPopup');
+const restartBtn = document.getElementById('restartBtn');
+
+const rockSound = document.getElementById('rockSound'); // 获取音效元素
+const failSound = document.getElementById('failSound'); // 获取音效元素
+const winningSound = document.getElementById('winningSound'); // 获取音效元素
+const shineSound = document.getElementById('shineSound'); // 获取音效元素
+
+restartBtn.addEventListener('click', () => {
+    failPopup.style.display = 'none';
+    //reload
+    location.reload();
+});
 class game {
     constructor() {
         this.canvas = null; // 画布元素
@@ -40,9 +45,9 @@ class game {
 
     init() {
         this.canvas = document.createElement("canvas"); // 创建画布
+        this.canvas.id = "gameBoard"; // 设置画布ID
         this.context = this.canvas.getContext("2d"); // 获取2D上下文
         document.body.appendChild(this.canvas); // 将画布添加到页面
-
         this.render(); // 渲染画布
         this.newGold(); // 生成新金块
         this.initGold(); // 初始化金块
@@ -95,17 +100,15 @@ class game {
         } else {
             if (this.score >= tager || this.checkWin()) {
                 this.showResult(true); // 显示成功图片
+                winningSound.play();
                 setTimeout(() => {
                     document.getElementById("successPopup").style.display = "none";
                     this.newGold();
                     this.loop();
-                }, 2000); // 2秒后生成新金块
+                }, 4000); // 4秒后生成新金块
             } else {
                 this.showResult(false); // 显示失败图片
-                setTimeout(() => {
-                    window.alert("You lose!" + "\n" + "Your Score: " + this.score); // 游戏失败提示
-                    location.reload(); // 重新加载页面
-                }, 2000); // 2秒后重新加载页面
+                failSound.play();
             }
         }
     }
@@ -135,6 +138,7 @@ class game {
                 if (this.gg[i].alive && this.range(Xh, Yh, this.gg[i].x, this.gg[i].y) <= 2 * this.getWidth()) {
                     this.gg[i].alive = false; // 设置金块为死亡状态
                     this.score += this.gg[i].score; // 增加分数
+                    shineSound.play();
                     timeH = time - 0.7; // 设置时间变量
                     vlH = this.gg[i].score; // 设置分数变量
                 }
@@ -144,6 +148,7 @@ class game {
             for (let i = 0; i < N; i++)
                 if (this.gg[i].alive && this.range(Xh, Yh, this.gg[i].x, this.gg[i].y) <= this.gg[i].size()) {
                     ok = true; // 设置抓取成功
+                    rockSound.play();
                     index = i; // 设置抓取索引
                     break;
                 }
@@ -221,7 +226,11 @@ class game {
         // this.context.drawImage(clockIM, game_W - 3 * this.getWidth(), this.getWidth() / 2 + this.getWidth(), this.getWidth(), this.getWidth()); // 绘制时钟图片
         this.context.fillStyle = "#FF00FF"; // 设置时间颜色
         this.context.font = this.getWidth() + 'px Stencil'; // 设置字体
-        this.context.fillText("⏱️"+ Math.floor(time), game_W - 3 * this.getWidth(), this.getWidth() * 2.1); // 绘制剩余时间
+        let timeTxt = time.toFixed(0);
+        if (time<=0){
+            timeTxt = 0;
+        }
+        this.context.fillText("⏱️"+ timeTxt, game_W - 3 * this.getWidth(), this.getWidth() * 2.1); // 绘制剩余时间
 
         if (Math.abs(timeH - time) <= 0.7) {
             this.context.fillStyle = "red"; // 设置分数颜色
