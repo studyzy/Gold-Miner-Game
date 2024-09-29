@@ -11,7 +11,7 @@ let angle = 90; // 角度
 let ChAngle = -1; // 角度变化
 index = -1; // 当前抓取的金块索引
 level = -1; // 当前关卡
-time = 20; // 剩余时间
+time = 60; // 剩余时间
 tager = 0; // 目标分数
 timeH = 0; // 时间变量
 vlH = 0; // 分数变量
@@ -65,7 +65,7 @@ class game {
         drag = false; // 重置拖拽状态
         timeH = -1; // 重置时间变量
         vlH = 0; // 重置分数变量
-        time = 20; // 重置时间
+        time = 60; // 重置时间
         level ++; // 增加关卡
         tager = (level + 1) * 1000 + level * level * 120; // 计算目标分数
         this.initGold(); // 初始化金块
