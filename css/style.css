@@ -17,3 +17,31 @@ html {
 
 html { overflow-y: hidden; }
 
+.popup {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: white;
+    border: 2px solid #87cefa;
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    z-index: 1000;
+}
+.popup button {
+    margin-top: 20px;
+    width: 100px;
+    height: 50px;
+    font-size: 24px;
+    background-color: #ffa07a;
+    border: none;
+    border-radius: 10px;
+    box-shadow: 2px 2px 5px #888888;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+.popup button:hover {
+    background-color: #ff6347;
+}

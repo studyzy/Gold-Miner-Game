@@ -11,7 +11,7 @@ let angle = 90; // 角度
 let ChAngle = -1; // 角度变化
 index = -1; // 当前抓取的金块索引
 level = -1; // 当前关卡
-time = 10; // 剩余时间
+time = 20; // 剩余时间
 tager = 0; // 目标分数
 timeH = 0; // 时间变量
 vlH = 0; // 分数变量
@@ -60,7 +60,7 @@ class game {
         drag = false; // 重置拖拽状态
         timeH = -1; // 重置时间变量
         vlH = 0; // 重置分数变量
-        time = 10; // 重置时间
+        time = 20; // 重置时间
         level ++; // 增加关卡
         tager = (level + 1) * 1000 + level * level * 120; // 计算目标分数
         this.initGold(); // 初始化金块
@@ -90,12 +90,16 @@ class game {
     loop() {
         this.update(); // 更新游戏状态
         this.draw(); // 绘制游戏画面
-        if (time > 0 || this.score > tager) {
+        if (time > 0) {
             setTimeout(() => this.loop(), 10); // 循环调用
         } else {
             if (this.score >= tager || this.checkWin()) {
                 this.showResult(true); // 显示成功图片
-                setTimeout(() => this.newGold(), 2000); // 2秒后生成新金块
+                setTimeout(() => {
+                    document.getElementById("successPopup").style.display = "none";
+                    this.newGold();
+                    this.loop();
+                }, 2000); // 2秒后生成新金块
             } else {
                 this.showResult(false); // 显示失败图片
                 setTimeout(() => {
@@ -197,27 +201,27 @@ class game {
     }
 
     drawText() {
-        this.context.drawImage(dolarIM, this.getWidth() / 2, this.getWidth() / 2, this.getWidth(), this.getWidth()); // 绘制金币图片
+        // this.context.drawImage(dolarIM, this.getWidth() / 2, this.getWidth() / 2, this.getWidth(), this.getWidth()); // 绘制金币图片
         this.context.fillStyle = "red"; // 设置文本颜色
         if (this.score > tager)
             this.context.fillStyle = "#FF6600"; // 设置目标分数颜色
         this.context.font = this.getWidth() + 'px Stencil'; // 设置字体
-        this.context.fillText(this.score, this.getWidth() * 1.5, this.getWidth() * 1.35); // 绘制当前分数
+        this.context.fillText("💰"+ this.score, this.getWidth() , this.getWidth() * 1.1); // 绘制当前分数
 
-        this.context.drawImage(targetIM, this.getWidth() / 2, this.getWidth() / 2 + this.getWidth(), this.getWidth(), this.getWidth()); // 绘制目标图片
+        // this.context.drawImage(targetIM, this.getWidth() / 2, this.getWidth() / 2 + this.getWidth(), this.getWidth(), this.getWidth()); // 绘制目标图片
         this.context.fillStyle = "#FF6600"; // 设置目标分数颜色
         this.context.font = this.getWidth() + 'px Stencil'; // 设置字体
-        this.context.fillText(tager, this.getWidth() * 1.5, this.getWidth() * 2.35); // 绘制目标分数
+        this.context.fillText("🎯"+ tager, this.getWidth(), this.getWidth() * 2.1); // 绘制目标分数
 
-        this.context.drawImage(levelIM, game_W - 3 * this.getWidth(), this.getWidth() / 2, this.getWidth(), this.getWidth()); // 绘制关卡图片
+        // this.context.drawImage(levelIM, game_W - 3 * this.getWidth(), this.getWidth() / 2, this.getWidth(), this.getWidth()); // 绘制关卡图片
         this.context.fillStyle = "#FFFFCC"; // 设置关卡颜色
         this.context.font = this.getWidth() + 'px Stencil'; // 设置字体
-        this.context.fillText(level + 1, game_W - 2 * this.getWidth(), this.getWidth() * 1.35); // 绘制关卡
+        this.context.fillText("🏆"+(level + 1), game_W - 3 * this.getWidth(), this.getWidth() * 1.1); // 绘制关卡
 
-        this.context.drawImage(clockIM, game_W - 3 * this.getWidth(), this.getWidth() / 2 + this.getWidth(), this.getWidth(), this.getWidth()); // 绘制时钟图片
+        // this.context.drawImage(clockIM, game_W - 3 * this.getWidth(), this.getWidth() / 2 + this.getWidth(), this.getWidth(), this.getWidth()); // 绘制时钟图片
         this.context.fillStyle = "#FF00FF"; // 设置时间颜色
         this.context.font = this.getWidth() + 'px Stencil'; // 设置字体
-        this.context.fillText(Math.floor(time), game_W - 2 * this.getWidth(), this.getWidth() * 2.35); // 绘制剩余时间
+        this.context.fillText("⏱️"+ Math.floor(time), game_W - 3 * this.getWidth(), this.getWidth() * 2.1); // 绘制剩余时间
 
         if (Math.abs(timeH - time) <= 0.7) {
             this.context.fillStyle = "red"; // 设置分数颜色
@@ -234,15 +238,16 @@ class game {
         let check = true; // 检查是否胜利
         for (let i = 0; i < N; i++)
             if (this.gg[i].alive == true)
-                check = false; // 如��有金块存活则未胜利
+                check = false; // 如果有金块存活则未胜利
         return check;
     }
     showResult(success) {
-        const resultImage = new Image();
-        resultImage.src = success ? "images/success.jpg" : "images/fail.jpg";
-        resultImage.onload = () => {
-            this.context.drawImage(resultImage, (game_W - resultImage.width) / 2, (game_H - resultImage.height) / 2);
-        };
+        if (success) {
+            document.getElementById("successPopup").style.display = "block";
+        } else {
+            document.getElementById("failPopup").style.display = "block";
+            document.getElementById("score").innerText = "得分: " + this.score;
+        }
     }
     initGold() {
         this.gg = []; // 初始化金块数组
@@ -257,7 +262,7 @@ class game {
                         this.gg[j].randomXY();
                     }
             if (check)
-                    break; // ���果所有金块位置合法则退出循环
+                    break; // 如果所有金块位置合法则退出循环
         }
     }
 

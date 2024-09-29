@@ -1,14 +1,25 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh">
 <head>
-    <title>HaiZuka - Gold Miner Game</title>
+    <meta charset="UTF-8">
+    <title>黄金矿工深蓝版</title>
     <link rel="stylesheet" href="css/style.css">
     <meta 
         name='viewport' 
         content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0' 
     />
 </head>
-<body></body>
+<body>
+<div id="gameBoard"></div>
+<div id="successPopup" class="popup" style="display: none;">
+<img src="images/success.jpg"/>
+</div>
+<div id="failPopup" class="popup" style="display: none;">
+<img src="images/fail.jpg"/>
+    <label id="score">得分: 0</label>
+    <button id="restartBtn">再来</button>
+</div>
+</body>
 <script type="text/javascript" src="js/gold.js"></script>
 <script type="text/javascript" src="js/game.js"></script>
 </html>
