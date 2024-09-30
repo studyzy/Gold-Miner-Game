@@ -54,6 +54,8 @@ class game {
         this.loop(); // 开始游戏循环
         this.listenKeyboard(); // 监听键盘事件
         this.listenMouse(); // 监听鼠标事件
+        this.listenTouch(); // 监听触摸事件
+
     }
 
     newGold() {
@@ -82,7 +84,17 @@ class game {
             this.solve(); // 处理鼠标事件
         })
     }
-
+    listenTouch() {
+        document.addEventListener("touchstart", evt => {
+            this.solve(); // 处理触摸事件
+        });
+        document.addEventListener("touchend", evt => {
+            this.solve(); // 处理触摸事件
+        });
+        document.addEventListener("touchmove", evt => {
+            this.solve(); // 处理触摸事件
+        });
+    }
     solve() {
         if (!drag) {
             drag = true; // 开始拖拽

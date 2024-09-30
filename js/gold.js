@@ -6,6 +6,8 @@ var diamondIM = new Image();
 diamondIM.src="images/diamond.png";
 var randomIm = new Image();
 randomIm.src="images/random.png";
+var bitcoinIm = new Image();
+bitcoinIm.src="images/bitcoin.png";
 class gold {
     constructor(game) {
         // 保存游戏实例
@@ -16,7 +18,7 @@ class gold {
 
     init() {
         // 随机生成金块类型
-        this.type = Math.floor(Math.random() * 100000) % 8;
+        this.type = Math.floor(Math.random() * 100000) % 9;
         // 随机生成金块的 x 坐标
         this.x = 2 * this.game.getWidth() + Math.random() * (game_W - 4 * this.game.getWidth());
         // 随机生成金块的 y 坐标
@@ -93,6 +95,14 @@ class gold {
                 this.height = this.game.getWidth() / 2.5;
                 this.IM = diamondIM;
                 this.score = 600;
+                break;
+            case 8:
+                // 比特币
+                this.speed = this.game.getWidth() / 30;
+                this.width = this.game.getWidth() * 2;
+                this.height = this.game.getWidth() * 2;
+                this.IM = bitcoinIm;
+                this.score = 999;
                 break;
         }
     }
