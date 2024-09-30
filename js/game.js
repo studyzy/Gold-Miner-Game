@@ -9,6 +9,7 @@ let d = false; // 拖拽方向
 let ok = false; // 是否成功抓取
 let angle = 90; // 角度
 let ChAngle = -0.5; // 角度变化
+let dynamiteNumber = 0; // 是否拥有炸药
 index = -1; // 当前抓取的金块索引
 level = -1; // 当前关卡
 time = 60; // 剩余时间
@@ -29,7 +30,7 @@ const rockSound = document.getElementById('rockSound'); // 获取音效元素
 const failSound = document.getElementById('failSound'); // 获取音效元素
 const winningSound = document.getElementById('winningSound'); // 获取音效元素
 const shineSound = document.getElementById('shineSound'); // 获取音效元素
-
+const blastSound = document.getElementById('blastSound'); // 获取音效元素
 restartBtn.addEventListener('click', () => {
     failPopup.style.display = 'none';
     //reload
@@ -55,6 +56,19 @@ class game {
         this.listenKeyboard(); // 监听键盘事件
         this.listenMouse(); // 监听鼠标事件
         this.listenTouch(); // 监听触摸事件
+        //监听炸药使用
+        document.addEventListener("click", evt => {
+            let x = evt.clientX;
+            let y = evt.clientY;
+            let dynamiteX = (game_W + 6 * this.getWidth())/2;
+            let dynamiteY = this.getWidth() * 0.5;
+            if (x >= dynamiteX && x <= game_W && y >= dynamiteY && y <= dynamiteY + this.getWidth()) {
+                if (dynamiteNumber>0) {
+                    this.useDynamite();
+                }
+            }
+
+        });
 
     }
 
@@ -153,6 +167,10 @@ class game {
                     shineSound.play();
                     timeH = time - 0.7; // 设置时间变量
                     vlH = this.gg[i].score; // 设置分数变量
+                    //如果是随机包，增加炸药
+                    if (this.gg[i].type == 6) {
+                        dynamiteNumber ++;
+                    }
                 }
             }
         }
@@ -218,6 +236,12 @@ class game {
     }
 
     drawText() {
+        //绘制炸药道具
+        if (dynamiteNumber>0) {
+            for (let i = 0; i < dynamiteNumber; i++) {
+                this.context.drawImage(dynamiteIm, (game_W + 6 * this.getWidth())/2+i*100, this.getWidth() * 0.5, this.getWidth()/2, this.getWidth());
+            }
+        }
         // this.context.drawImage(dolarIM, this.getWidth() / 2, this.getWidth() / 2, this.getWidth(), this.getWidth()); // 绘制金币图片
         this.context.fillStyle = "red"; // 设置文本颜色
         if (this.score > tager)
@@ -249,7 +273,18 @@ class game {
             this.context.fillText("+" + vlH, XXX, YYY * 0.8); // 绘制增加的分数
         }
     }
-
+    useDynamite() {
+        console.log("use dynamite",dynamiteNumber);
+        dynamiteNumber --; // 使用炸药
+        const blastSoundClone = blastSound.cloneNode(); // 克隆音效
+        blastSoundClone.play();
+        if (index != -1) {
+            this.gg[index].alive = false; // 抓到的物体消失
+            index = -1; // 重置抓取索引
+            drag = false; // 停止拖拽
+            ok = false; // 重置抓取状态
+        }
+    }
     clearScreen() {
         this.context.clearRect(0, 0, game_W, game_H); // 清空画布
         this.context.drawImage(bg, (bg.width - game_W * (bg.height / game_H)) / 2, 0, game_W * (bg.height / game_H), bg.height, 0, 0, game_W, game_H); // 绘制背景图片

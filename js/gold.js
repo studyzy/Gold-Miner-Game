@@ -8,6 +8,8 @@ var randomIm = new Image();
 randomIm.src="images/random.png";
 var bitcoinIm = new Image();
 bitcoinIm.src="images/bitcoin.png";
+var dynamiteIm = new Image();
+dynamiteIm.src="images/dynamite.png";
 class gold {
     constructor(game) {
         // 保存游戏实例
