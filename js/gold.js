@@ -4,7 +4,8 @@ var rockIm = new Image();
 rockIm.src="images/rock.png";
 var diamondIM = new Image();
 diamondIM.src="images/diamond.png";
-
+var randomIm = new Image();
+randomIm.src="images/random.png";
 class gold {
     constructor(game) {
         // 保存游戏实例
@@ -78,6 +79,13 @@ class gold {
                 this.score = 30;
                 break;
             case 6:
+                //随机包
+                this.speed = this.game.getWidth() / 8;
+                this.width = 1 * this.game.getWidth();
+                this.height = 1 * this.game.getWidth();
+                this.IM = randomIm;
+                this.score = Math.floor(Math.random() * 1000);
+                break;
             case 7:
                 // 钻石
                 this.speed = this.game.getWidth() / 2.5;
