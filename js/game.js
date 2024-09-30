@@ -193,7 +193,7 @@ class game {
         this.clearScreen(); // 清空画布
         for (let i = 0; i < N; i++)
             if (this.gg[i].alive) {
-                this.gg[i].update(); // 更新金块状态
+                this.gg[i].update(time); // 更新金块状态
                 this.gg[i].draw(); // 绘制金块
             }
 

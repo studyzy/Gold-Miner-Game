@@ -29,7 +29,7 @@ class gold {
         this.update();
     }
 
-    update() {
+    update(time) {
         // 根据金块类型设置不同的属性
         switch (this.type) {
             case 0:
@@ -97,12 +97,12 @@ class gold {
                 this.score = 600;
                 break;
             case 8:
-                // 比特币
+                // 比特币,随着时间的推移，挖到的比特币会减少，其大小也会变小（难度增大）
                 this.speed = this.game.getWidth() / 30;
-                this.width = this.game.getWidth() * 2;
-                this.height = this.game.getWidth() * 2;
+                this.width = this.game.getWidth() * 2*time/60;
+                this.height = this.game.getWidth() * 2*time/60;
                 this.IM = bitcoinIm;
-                this.score = 999;
+                this.score =Math.floor( 1000*time/60);
                 break;
         }
     }
