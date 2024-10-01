@@ -52,7 +52,6 @@ class game {
         document.body.appendChild(this.canvas); // 将画布添加到页面
         this.render(); // 渲染画布
         this.newGold(); // 生成新金块
-        this.initGold(); // 初始化金块
         this.loop(); // 开始游戏循环
         this.listenKeyboard(); // 监听键盘事件
         this.listenMouse(); // 监听鼠标事件
@@ -312,7 +311,14 @@ class game {
     }
     initGold() {
         this.gg = []; // 初始化金块数组
-        for (let i = 0; i < N; i++)
+        //特殊关卡展示宝箱
+        if (level%5 == 0) {
+
+            this.gg[0] = new gold(this); // 创建金块实例
+            this.gg[0].type = 99; // 设置金块类型
+            this.gg[0].randomXY(); // 随机生成金块位置
+        }
+        for (let i = this.gg.length; i < N; i++)
             this.gg[i] = new gold(this); // 创建金块实例
         while (true) {
             let check = true; // 检查金块位置

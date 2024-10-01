@@ -116,29 +116,7 @@ class gold {
                 this.IM = bitcoinIm;
                 this.score =Math.floor( 1000*time/60);
                 break;
-            case 9:
-                // 宝箱
-                this.speed = this.game.getWidth() / 30;
-                this.width = 2.5 * this.game.getWidth();
-                this.height = 2.5 * this.game.getWidth() ;
-                this.IM = treasureIm;
-                this.score = 10000;
-                break;
-            case 10: //扑克牌
-                this.speed = this.game.getWidth() / 30;
-                this.width = 1.5 * this.game.getWidth();
-                this.height = 1.5 * this.game.getWidth();
-                this.IM = pokerIm;
-                this.score = -1000;
-                break;
-            case 11: //毒品
-                this.speed = this.game.getWidth() / 30;
-                this.width = 1.5 * this.game.getWidth();
-                this.height = 1.5 * this.game.getWidth();
-                this.IM = drugIm;
-                this.score = -500;
-                break;
-            case 12://抱着钻石的土拨鼠
+            case 9://抱着钻石的土拨鼠
                 this.speed = this.game.getWidth()/10 ;
                 this.width =  this.game.getWidth();
                 this.height =  this.game.getWidth();
@@ -156,6 +134,29 @@ class gold {
                 }
                 this.x+=this.moveSpeed;
                 this.score = 602;
+                break;
+            case 10: //扑克牌
+                this.speed = this.game.getWidth() / 30;
+                this.width = 1.5 * this.game.getWidth();
+                this.height = 1.5 * this.game.getWidth();
+                this.IM = pokerIm;
+                this.score = -1000;
+                break;
+            case 11: //毒品
+                this.speed = this.game.getWidth() / 30;
+                this.width = 1.5 * this.game.getWidth();
+                this.height = 1.5 * this.game.getWidth();
+                this.IM = drugIm;
+                this.score = -500;
+                break;
+
+            case 99:
+                // 宝箱，不随机出现，在特定关卡出现
+                this.speed = this.game.getWidth() / 30;
+                this.width = 2.5 * this.game.getWidth();
+                this.height = 2.5 * this.game.getWidth() ;
+                this.IM = treasureIm;
+                this.score = 10000;
                 break;
         }
     }
@@ -176,6 +177,8 @@ class gold {
             this.game.context.drawImage(this.IM, this.x - this.width / 2, this.y - this.height / 2, this.width, this.height);
         }
         this.game.context.restore();
+        this.game.context.drawImage(this.IM, this.x - this.width / 2, this.y - this.height / 2, this.width, this.height);
+
     }
 
     size() {
