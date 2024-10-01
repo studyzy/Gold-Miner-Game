@@ -12,6 +12,7 @@ let ok = false; // 是否成功抓取
 let angle = 90; // 角度
 let ChAngle = -0.5; // 角度变化
 let dynamiteNumber = 0; // 拥有炸药数量
+let drugNumber = 0; // 拥有毒品数量
 index = -1; // 当前抓取的金块索引
 level = -1; // 当前关卡
 time = 60; // 剩余时间
@@ -145,6 +146,7 @@ class game {
         time -= 0.01; // 减少时间
         Xh = XXX + r * Math.cos(this.toRadian(angle)); // 计算钩子X坐标
         Yh = YYY + r * Math.sin(this.toRadian(angle)); // 计算钩子Y坐标
+        this.score-=drugNumber/100; // 减少分数
         if (!drag) {
             angle += ChAngle; // 改变角度
             if (angle >= 165 || angle <= 15)
@@ -168,13 +170,15 @@ class game {
                     shineSound.play();
                     timeH = time - 0.7; // 设置时间变量
                     vlH = this.gg[i].score; // 设置分数变量
-                    //如果是随机包，增加炸药
+                    //如果是随机包，增加炸药，清除毒瘾
                     if (this.gg[i].type == 6) {
                         dynamiteNumber ++;
+                        drugNumber=0;
                     }
                     //如果是毒品，则速度变慢
                     if (this.gg[i].type == 11) {
                         speedReturnRank = 4;
+                        drugNumber++;
                         lineColor= "purple" // 紫色
                     }
                 }
@@ -253,7 +257,7 @@ class game {
         if (this.score > tager)
             this.context.fillStyle = "#FF6600"; // 设置目标分数颜色
         this.context.font = this.getWidth() + 'px Stencil'; // 设置字体
-        this.context.fillText("💰"+ this.score, this.getWidth() , this.getWidth() * 1.1); // 绘制当前分数
+        this.context.fillText("💰"+  this.score.toFixed(0), this.getWidth() , this.getWidth() * 1.1); // 绘制当前分数
 
         // this.context.drawImage(targetIM, this.getWidth() / 2, this.getWidth() / 2 + this.getWidth(), this.getWidth(), this.getWidth()); // 绘制目标图片
         this.context.fillStyle = "#FF6600"; // 设置目标分数颜色
@@ -275,8 +279,17 @@ class game {
         this.context.fillText("⏱️"+ timeTxt, game_W - 3 * this.getWidth(), this.getWidth() * 2.1); // 绘制剩余时间
 
         if (Math.abs(timeH - time) <= 0.7) {
-            this.context.fillStyle = "red"; // 设置分数颜色
-            this.context.fillText("+" + vlH, XXX, YYY * 0.8); // 绘制增加的分数
+            this.context.fillStyle = "green"; // 设置分数颜色
+            let addScore=""+vlH;
+            if (vlH > 0){
+                this.context.fillStyle = "red"; // 设置分数颜色
+                addScore = "+"+vlH;
+            }
+            this.context.fillText(addScore, XXX, YYY * 0.8); // 绘制增加的分数
+        }
+        if (drugNumber>0){
+            this.context.fillStyle = "purple"; // 设置分数颜色
+            this.context.fillText("💉-"+drugNumber, this.getWidth() +300, this.getWidth() * 1.1); // 绘制毒品减分
         }
     }
     useDynamite() {
@@ -308,7 +321,7 @@ class game {
             document.getElementById("successPopup").style.display = "block";
         } else {
             document.getElementById("failPopup").style.display = "block";
-            document.getElementById("score").innerText = "得分: " + this.score;
+            document.getElementById("score").innerText = "得分: " + this.score.toFixed(0);
         }
     }
     initTreasure() {
@@ -341,9 +354,21 @@ class game {
 
     initGold() {
         this.gg = []; // 初始化金块数组
-        //特殊关卡展示宝箱
-        if (level%5 == 0) {
+        //特殊关卡展示特殊物品
+        if (level%10 == 0) {
             this.initTreasure();
+        }
+        if (level%3 == 1) {
+            let i=this.gg.length;
+            this.gg[i] = new gold(this);
+            this.gg[i].type = 10; // 设置金块类型
+            this.gg[i].randomXY(); // 随机生成金块位置
+        }
+        if (level%7 == 2) {
+            let i=this.gg.length;
+            this.gg[i] = new gold(this);
+            this.gg[i].type = 11; // 设置金块类型
+            this.gg[i].randomXY(); // 随机生成金块位置
         }
         for (let i = this.gg.length; i < N; i++)
             this.gg[i] = new gold(this); // 创建金块实例
