@@ -177,8 +177,6 @@ class gold {
             this.game.context.drawImage(this.IM, this.x - this.width / 2, this.y - this.height / 2, this.width, this.height);
         }
         this.game.context.restore();
-        this.game.context.drawImage(this.IM, this.x - this.width / 2, this.y - this.height / 2, this.width, this.height);
-
     }
 
     size() {
