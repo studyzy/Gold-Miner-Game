@@ -3,6 +3,7 @@ let game_H = 20; // 游戏画布的高度
 let XXX = 0, YYY = 0, Xh = 0, Yh = 0; // 各种坐标变量
 let MaxLeng = 0; // 最大长度
 let speedReturn = 0; // 返回速度
+let speedReturnRank = 2; // 返回速度等级
 let R = 0, r = 0; // 半径变量
 let drag = false; // 拖拽状态
 let d = false; // 拖拽方向
@@ -113,7 +114,7 @@ class game {
         if (!drag) {
             drag = true; // 开始拖拽
             d = true; // 设置拖拽方向
-            speedReturn = this.getWidth() / 2; // 设置返回速度
+            speedReturn = this.getWidth() / speedReturnRank; // 设置返回速度
             index = -1; // 重置抓取索引
         }
     }
@@ -155,7 +156,7 @@ class game {
                 d = false; // 停止增加半径
                 r -= speedReturn / 2.5; // 减少半径
             }
-            if (r < R) {
+            if (r < R) {//抓取完毕，结算
                 r = R; // 重置半径
                 drag = false; // 停止拖拽
                 ok = false; // 重置抓取状态
@@ -170,6 +171,10 @@ class game {
                     //如果是随机包，增加炸药
                     if (this.gg[i].type == 6) {
                         dynamiteNumber ++;
+                    }
+                    //如果是毒品，则速度变慢
+                    if (this.gg[i].type == 11) {
+                        speedReturnRank = 4;
                     }
                 }
             }
@@ -186,7 +191,7 @@ class game {
         if (index != -1) {
             this.gg[index].x = Xh; // 更新金块X坐标
             this.gg[index].y = Yh + this.gg[index].height / 3; // 更新金块Y坐标
-            speedReturn = this.gg[index].speed; // 设置返回速度
+            speedReturn = this.gg[index].speed/speedReturnRank; // 设置返回速度
         }
     }
 
