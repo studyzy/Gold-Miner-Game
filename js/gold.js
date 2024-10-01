@@ -29,7 +29,7 @@ class gold {
 
     init() {
         // 随机生成金块类型
-        this.type = Math.floor(Math.random() * 100000) % 13;
+        this.type = Math.floor(Math.random() * 100000) % 12;
         this.moveSpeed=1;
         // 随机生成金块的 x 坐标
         this.x = 2 * this.game.getWidth() + Math.random() * (game_W - 4 * this.game.getWidth());
