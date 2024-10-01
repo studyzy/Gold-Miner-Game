@@ -5,12 +5,13 @@ let MaxLeng = 0; // 最大长度
 let speedReturn = 0; // 返回速度
 let speedReturnRank = 2; // 返回速度等级
 let R = 0, r = 0; // 半径变量
+let lineColor = "red"; // 线条颜色
 let drag = false; // 拖拽状态
 let d = false; // 拖拽方向
 let ok = false; // 是否成功抓取
 let angle = 90; // 角度
 let ChAngle = -0.5; // 角度变化
-let dynamiteNumber = 0; // 是否拥有炸药
+let dynamiteNumber = 0; // 拥有炸药数量
 index = -1; // 当前抓取的金块索引
 level = -1; // 当前关卡
 time = 60; // 剩余时间
@@ -174,6 +175,7 @@ class game {
                     //如果是毒品，则速度变慢
                     if (this.gg[i].type == 11) {
                         speedReturnRank = 4;
+                        lineColor= "purple" // 紫色
                     }
                 }
             }
@@ -220,7 +222,7 @@ class game {
             }
 
         this.context.beginPath();
-        this.context.strokeStyle  = "#FF0000"; // 设置线条颜色
+        this.context.strokeStyle  = lineColor; // 设置线条颜色
         this.context.lineWidth = Math.floor(this.getWidth() / 10); // 设置线条宽度
         this.context.moveTo(XXX, YYY); // 移动画笔到钩子位置
         this.context.lineTo(Xh, Yh); // ��线到钩子末端
@@ -309,15 +311,39 @@ class game {
             document.getElementById("score").innerText = "得分: " + this.score;
         }
     }
+    initTreasure() {
+        this.gg[0] = new gold(this); // 创建宝箱实例
+        this.gg[0].type = 99; // 设置金块类型
+        this.gg[0].randomXY(); // 随机生成金块位置
+        if( this.gg[0].x<this.gg[0].width*3) {
+            this.gg[0].x=this.gg[0].width*3;
+        }
+        if (this.gg[0].x>game_W-this.gg[0].width*3) {
+            this.gg[0].x=game_W-this.gg[0].width*3;
+        }
+        this.gg[0].y=game_H*0.9; //宝箱一定要藏得深
+        //宝箱上面放3个障碍物堵住
+        this.gg[1] = new gold(this); // 创建石头实例
+        this.gg[1].type = 5; // 设置金块类型
+        this.gg[1].x=this.gg[0].x-this.gg[0].width*2.2;
+        this.gg[1].y=this.gg[0].y-this.gg[0].height*1.5;
+
+        this.gg[2] = new gold(this); // 创建赌实例
+        this.gg[2].type = 10; // 设置金块类型
+        this.gg[2].x=this.gg[0].x;
+        this.gg[2].y=this.gg[0].y-this.gg[0].height*2;
+
+        this.gg[3] = new gold(this); // 创建毒实例
+        this.gg[3].type = 11; // 设置金块类型
+        this.gg[3].x=this.gg[0].x+this.gg[0].width*2.2;
+        this.gg[3].y=this.gg[0].y-this.gg[0].height*1.5;
+    }
+
     initGold() {
         this.gg = []; // 初始化金块数组
         //特殊关卡展示宝箱
         if (level%5 == 0) {
-
-            this.gg[0] = new gold(this); // 创建金块实例
-            this.gg[0].type = 99; // 设置金块类型
-            this.gg[0].randomXY(); // 随机生成金块位置
-            this.gg[0].y=game_H*0.9; //宝箱一定要藏得深
+            this.initTreasure();
         }
         for (let i = this.gg.length; i < N; i++)
             this.gg[i] = new gold(this); // 创建金块实例
