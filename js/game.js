@@ -243,7 +243,7 @@ class game {
         //绘制炸药道具
         if (dynamiteNumber>0) {
             for (let i = 0; i < dynamiteNumber; i++) {
-                this.context.drawImage(dynamiteIm, (game_W + 6 * this.getWidth())/2+i*100, this.getWidth() * 0.5, this.getWidth()/2, this.getWidth());
+                this.context.drawImage(dynamiteIm, (game_W + 6 * this.getWidth())/2+i*50, this.getWidth() * 0.5, this.getWidth()/2, this.getWidth());
             }
         }
         // this.context.drawImage(dolarIM, this.getWidth() / 2, this.getWidth() / 2, this.getWidth(), this.getWidth()); // 绘制金币图片
@@ -317,6 +317,7 @@ class game {
             this.gg[0] = new gold(this); // 创建金块实例
             this.gg[0].type = 99; // 设置金块类型
             this.gg[0].randomXY(); // 随机生成金块位置
+            this.gg[0].y=game_H*0.9; //宝箱一定要藏得深
         }
         for (let i = this.gg.length; i < N; i++)
             this.gg[i] = new gold(this); // 创建金块实例
