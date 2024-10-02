@@ -13,6 +13,9 @@ let angle = 90; // 角度
 let ChAngle = -0.5; // 角度变化
 let dynamiteNumber = 0; // 拥有炸药数量
 let drugNumber = 0; // 拥有毒品数量
+let mushroomCloudShow=false; // 是否显示蘑菇云
+let mushroomCloudSize = 0;
+
 index = -1; // 当前抓取的金块索引
 level = -1; // 当前关卡
 time = 60; // 剩余时间
@@ -34,6 +37,7 @@ const failSound = document.getElementById('failSound'); // 获取音效元素
 const winningSound = document.getElementById('winningSound'); // 获取音效元素
 const shineSound = document.getElementById('shineSound'); // 获取音效元素
 const blastSound = document.getElementById('blastSound'); // 获取音效元素
+const hugeExplosionSound = document.getElementById('hugeExplosionSound'); // 获取音效元素
 restartBtn.addEventListener('click', () => {
     failPopup.style.display = 'none';
     //reload
@@ -76,6 +80,7 @@ class game {
 
     newGold() {
         ok = false; // 重置抓取状态
+        mushroomCloudShow=false; // 重置蘑菇云状态
         index = -1; // 重置抓取索引
         Xh = XXX; // 重置钩子坐标
         Yh = YYY;
@@ -187,10 +192,15 @@ class game {
         if (drag && index == -1) {
             for (let i = 0; i < N; i++)
                 if (this.gg[i].alive && this.range(Xh, Yh, this.gg[i].x, this.gg[i].y) <= this.gg[i].size()) {
-                    ok = true; // 设置抓取成功
-                    rockSound.play();
-                    index = i; // 设置抓取索引
-                    break;
+                    if(this.gg[i].type===88){//核弹，清除所有金块
+                        this.nuclearBlast();
+                        return
+                    }
+                        ok = true; // 设置抓取成功
+                        rockSound.play();
+                        index = i; // 设置抓取索引
+                        break;
+
                 }
         }
         if (index != -1) {
@@ -199,7 +209,22 @@ class game {
             speedReturn = this.gg[index].speed/speedReturnRank; // 设置返回速度
         }
     }
-
+    nuclearBlast(){
+        //循环 this.gg
+        for (let i = 0; i < N; i++)
+            if (this.gg[i].alive) {
+                this.gg[i].alive = false; // 设置金块为死亡状态
+            }
+        //播放爆炸音效
+       let hugeExplosionSoundClone = hugeExplosionSound.cloneNode(); // 克隆音效
+        hugeExplosionSoundClone.play();
+        //显示蘑菇云图片
+        mushroomCloudShow=true;
+        //6秒后隐藏蘑菇云
+        setTimeout(() => {
+            mushroomCloudShow=false;
+        }, 6500);
+    }
     render() {
         if (game_W != document.documentElement.clientWidth || game_H != document.documentElement.clientHeight) {
             this.canvas.width = document.documentElement.clientWidth; // 设置画布宽度
@@ -224,7 +249,13 @@ class game {
                 this.gg[i].update(time); // 更新金块状态
                 this.gg[i].draw(); // 绘制金块
             }
+        if(mushroomCloudShow){//显示蘑菇云
+            mushroomCloudSize += 0.3; // Increase the size gradually
+            const centerX = game_W / 2;
+            const centerY = game_H ;
+            this.context.drawImage(mushroomCloudIm, centerX - (mushroomCloudSize*5.8)/2, (centerY - mushroomCloudSize *4.3)/2, mushroomCloudSize*5.8, mushroomCloudSize*4.3);
 
+        }
         this.context.beginPath();
         this.context.strokeStyle  = lineColor; // 设置线条颜色
         this.context.lineWidth = Math.floor(this.getWidth() / 10); // 设置线条宽度
@@ -337,7 +368,7 @@ class game {
         this.gg[0].y=game_H*0.9; //宝箱一定要藏得深
         //宝箱上面放3个障碍物堵住
         this.gg[1] = new gold(this); // 创建石头实例
-        this.gg[1].type = 5; // 设置金块类型
+        this.gg[1].type = 88; // 设置金块类型
         this.gg[1].x=this.gg[0].x-this.gg[0].width*2.2;
         this.gg[1].y=this.gg[0].y-this.gg[0].height*1.5;
 

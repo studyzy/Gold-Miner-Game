@@ -18,7 +18,10 @@ var drugIm = new Image();
 drugIm.src="images/drug.png";
 var gopherDiamondIm = new Image();
 gopherDiamondIm.src="images/gohper-diamond.png";
-
+var nuclearIm = new Image();
+nuclearIm.src="images/nuclear.png";
+var mushroomCloudIm = new Image();
+mushroomCloudIm.src="images/mushroom-cloud.png";
 class gold {
     constructor(game) {
         // 保存游戏实例
@@ -149,7 +152,13 @@ class gold {
                 this.IM = drugIm;
                 this.score = -500;
                 break;
-
+            case 88://核弹
+                this.speed = this.game.getWidth() / 30;
+                this.width = 2 * this.game.getWidth();
+                this.height = 2.7 * this.game.getWidth();
+                this.IM = nuclearIm;
+                this.score = 0;
+                break;
             case 99:
                 // 宝箱，不随机出现，在特定关卡出现
                 this.speed = this.game.getWidth() / 30;
